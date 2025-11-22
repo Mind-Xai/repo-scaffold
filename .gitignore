@@ -1,0 +1,4 @@
+﻿node_modules/
+repo_facts.txt
+*.log
+.vscode/

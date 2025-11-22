@@ -1,0 +1,33 @@
+﻿name: Gather repo facts and test
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  gather:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run gather script
+        run: pwsh -NoProfile -ExecutionPolicy Bypass -File .\tools\gather_repo_facts_fixed.ps1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Upload repo_facts.txt
+        uses: actions/upload-artifact@v3
+        with:
+          name: repo_facts
+          path: repo_facts.txt
