@@ -26,7 +26,11 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Confirm repo_facts
+        run: pwsh -NoProfile -Command "Write-Output 'Listing repo root:'; Get-ChildItem -Path . -Force | Select-Object -First 200; if (Test-Path 'repo_facts.txt') { Write-Output 'repo_facts.txt found'; Get-Content -Path 'repo_facts.txt' -TotalCount 200 } else { Write-Error 'repo_facts.txt not found' }"
+
       - name: Upload repo_facts.txt
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: repo_facts
